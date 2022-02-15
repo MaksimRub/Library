@@ -1,6 +1,10 @@
 package com.example.library;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button add,del;
 
-    EditText name,author;
+    EditText name,author,year;
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,28 +44,60 @@ public class MainActivity extends AppCompatActivity {
 
         name=findViewById(R.id.name);
         author=findViewById(R.id.author);
+        year=findViewById(R.id.year);
+
+
+
 
         //TODO подготовка данных
         LinkedList<Book> bookLinkedList=new LinkedList<>();
-        bookLinkedList.add(new Book("Гарри поттер","Роулинг"));
-        bookLinkedList.add(new Book("Идиот","Достаевский"));
-        bookLinkedList.add(new Book("Гиперболоид инженнера Гарина","А.Толстой"));
-        bookLinkedList.add(new Book("Роковые яйца","М.Булгаков"));
-        bookLinkedList.add(new Book("Колобок","народ"));
+        bookLinkedList.add(new Book("Основание","АюАзимов",2015,R.drawable.osnovanie));
+        bookLinkedList.add(new Book("Преступление и наказание","Достаевский",1972,R.drawable.prestuplenie));
+        bookLinkedList.add(new Book("Шинель","Гоголь",1998,R.drawable.shinel));
+        bookLinkedList.add(new Book("Роковые яйца","М.Булгаков",2018,R.drawable.book));
+        bookLinkedList.add(new Book("Колобок","народ",2001,R.drawable.book));
 
+
+        //TODO сщздать массив с ключами и идентификаторами
+        String[]keyArray={"title","author","year","cover"};
+        int [] idArray={R.id.book_title,R.id.author,R.id.year,R.id.image};
+
+        //TODO сщздание списка map для адаптера
+        LinkedList<HashMap<String,Object>> listForAdopter=new LinkedList<>();
+        for (int i = 0; i < bookLinkedList.size(); i++) {
+            HashMap<String,Object>bookMap=new HashMap<>();
+            bookMap.put(keyArray[0],bookLinkedList.get(i).title);
+            bookMap.put(keyArray[1],bookLinkedList.get(i).author);
+            bookMap.put(keyArray[2],bookLinkedList.get(i).year);
+            bookMap.put(keyArray[3],bookLinkedList.get(i).coverId);
+            listForAdopter.add(bookMap);
+
+        }
         //TODO создпние адаптера
 
-        ArrayAdapter<Book>adapter=new ArrayAdapter<>(this,R.layout.list_item,bookLinkedList);
+        //ArrayAdapter<Book>adapter=new ArrayAdapter<>(this,R.layout.list_item,bookLinkedList);
         //SimpleAdapter adapter1;
         //SimpleCursorAdapter adapter2;
+        SimpleAdapter simpleAdapter=new SimpleAdapter(this,listForAdopter,R.layout.list_item,keyArray,idArray);
 
-        bookList.setAdapter(adapter);
+        bookList.setAdapter(simpleAdapter);
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(), bookLinkedList.get(i).toString(), Toast.LENGTH_SHORT).show();
+                FragmentManager manager = getSupportFragmentManager();
+                MyAlertDialog myDialogFragment = new MyAlertDialog();
+                //myDialogFragment.show(manager, "myDialog");
+                Bundle args = new Bundle();
+                String a=listForAdopter.get(i).get("title").toString()+listForAdopter.get(i).get("author").toString();
+                args.putString("name",a );
+                myDialogFragment.setArguments(args);
+                FragmentTransaction transaction = manager.beginTransaction();
+                myDialogFragment.show(transaction, "dialog");
             }
         });
+
+
         //TODO создать интерфейс(можно кнопками) добавления/удаления кнниги
 
         add.setOnClickListener(new View.OnClickListener() {
@@ -63,8 +105,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String name1=name.getText().toString();
                 String author1=author.getText().toString();
-                bookLinkedList.add(new Book(name1,author1));
-                adapter.notifyDataSetChanged();
+                int year1=0;
+                try {
+                    year1 = Integer.parseInt(year.getText().toString());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "введите год числом", Toast.LENGTH_SHORT).show();
+
+                }
+                if (year1!=0) {
+                    bookLinkedList.add(new Book(name1,author1,year1,R.drawable.book));
+                    HashMap<String, Object> bookMap = new HashMap<>();
+                    bookMap.put(keyArray[0], name1);
+                    bookMap.put(keyArray[1], author1);
+                    bookMap.put(keyArray[2], year1);
+                    bookMap.put(keyArray[3], R.drawable.book);
+                    listForAdopter.add(bookMap);
+                    simpleAdapter.notifyDataSetChanged();
+                }
 
 
 
@@ -76,17 +133,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String name1=name.getText().toString();
                 String author1=author.getText().toString();
-                for (int i = 0; i < bookLinkedList.size(); i++) {
+                for (int i = 0; i < listForAdopter.size(); i++) {
                     if((name1+" "+author1).equals(bookLinkedList.get(i).toString())){
-                        bookLinkedList.remove(i);
+                        listForAdopter.remove(i);
                         break;
                     }
                 }
-                adapter.notifyDataSetChanged();
+                simpleAdapter.notifyDataSetChanged();
 
             }
         });
 
-        adapter.notifyDataSetChanged();//обновление экрана
+        simpleAdapter.notifyDataSetChanged();//обновление экрана
+
+        //TODO сделать аннотацию к книге
     }
 }

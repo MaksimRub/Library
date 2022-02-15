@@ -5,7 +5,8 @@
       <map>
         <entry key="..\:/Android/programsandroid/Library/app/src/main/res/layout/activity_add_book.xml" value="0.25416666666666665" />
         <entry key="..\:/Android/programsandroid/Library/app/src/main/res/layout/activity_main.xml" value="0.536" />
-        <entry key="..\:/Android/programsandroid/Library/app/src/main/res/layout/list_item.xml" value="0.1" />
+        <entry key="..\:/Android/programsandroid/Library/app/src/main/res/layout/fragment_custom.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android/programsandroid/Library/app/src/main/res/layout/list_item.xml" value="0.2" />
       </map>
     </option>
   </component>

@@ -37,6 +37,7 @@
                 android:layout_below="@+id/book_list"
                 android:layout_toRightOf="@+id/del"
                 android:layout_alignParentRight="true"/>
+
             <EditText
                 android:id="@+id/name"
                 android:layout_width="match_parent"
@@ -47,6 +48,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="автор книги"/>
+    <EditText
+        android:id="@+id/year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="год издания книги"/>
 
     <ListView
         android:id="@+id/book_list"
