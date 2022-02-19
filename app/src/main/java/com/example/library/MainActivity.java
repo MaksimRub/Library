@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,17 +17,24 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
     ListView bookList;
 
-    Button add,del;
+    Button add,del,search;
 
     EditText name,author,year;
+
+
+    Dialog dialog;
+
+    TextView textView;
 
 
 
@@ -41,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         add=findViewById(R.id.add);
         del=findViewById(R.id.del);
+        search=findViewById(R.id.search);
 
         name=findViewById(R.id.name);
         author=findViewById(R.id.author);
@@ -48,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         //TODO подготовка данных
         LinkedList<Book> bookLinkedList=new LinkedList<>();
         bookLinkedList.add(new Book("Основание","АюАзимов",2015,R.drawable.osnovanie));
+        bookLinkedList.add(new Book("Основани","АюАзимов",2015,R.drawable.osnovanie));
         bookLinkedList.add(new Book("Преступление и наказание","Достаевский",1972,R.drawable.prestuplenie));
         bookLinkedList.add(new Book("Шинель","Гоголь",1998,R.drawable.shinel));
         bookLinkedList.add(new Book("Роковые яйца","М.Булгаков",2018,R.drawable.book));
@@ -140,6 +149,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 simpleAdapter.notifyDataSetChanged();
+
+            }
+        });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TreeSet<Book> treeSet = new TreeSet<>();
+                for (int i = 0; i < bookLinkedList.size(); i++) {
+                    treeSet.add(bookLinkedList.get(i));
+                }
+                String author1=author.getText().toString();
+                String all="";
+                for (Book s : treeSet) {
+                    if(s.author.equals(author1))
+                        all=all+"\n"+s.toString();
+
+                }
+                dialog=new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.dialog_simple);
+                textView=dialog.findViewById(R.id.search);
+                textView.setText(all);
+                dialog.show();
+
 
             }
         });
