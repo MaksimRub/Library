@@ -7,7 +7,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
 
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
+    LinkedList<HashMap<String,Object>> listForAdopter=new LinkedList<>();
+
+    OpenHelper openHelper;
+    SQLiteDatabase database;
 
 
 
@@ -56,15 +68,55 @@ public class MainActivity extends AppCompatActivity {
         year=findViewById(R.id.year);
 
 
+        openHelper=new OpenHelper(this);
+        database=openHelper.getWritableDatabase();
+
+        preferences=getSharedPreferences("book",MODE_PRIVATE);
+        editor=preferences.edit();
+        Set<String> ret = preferences.getStringSet("book", new HashSet<>());
+        String title1="";
+        String author1="";
+        String another="";
+        String year1="";
+        LinkedList<Book> bookLinkedList=new LinkedList<>();
+        for (String s:ret) {
+            for (int i = 0; i < s.length(); i++) {
+                String str=Character.toString(s.charAt(i));
+                if(str.equals("*")){
+                    another=another+str;
+                }
+                if(another.equals("*")&&!(Character.toString(s.charAt(i+1)).equals("*"))){
+                    title1=title1+Character.toString(s.charAt(i+1));
+                }
+                if(another.equals("**")&&!(Character.toString(s.charAt(i+1)).equals("*"))){
+                    author1=author1+Character.toString(s.charAt(i+1));
+                }
+                if(another.equals("***")&&i<s.length()-1){
+                    year1=year1+Character.toString(s.charAt(i+1));
+                }
+
+            }
+            bookLinkedList.add(new Book(title1,author1,Integer.parseInt(year1),R.drawable.book));
+            title1="";
+            author1="";
+            another="";
+            year1="";
+        }
+
+
+
+
+
 
         //TODO подготовка данных
-        LinkedList<Book> bookLinkedList=new LinkedList<>();
-        bookLinkedList.add(new Book("Основание","АюАзимов",2015,R.drawable.osnovanie));
-        bookLinkedList.add(new Book("Основани","АюАзимов",2015,R.drawable.osnovanie));
-        bookLinkedList.add(new Book("Преступление и наказание","Достаевский",1972,R.drawable.prestuplenie));
-        bookLinkedList.add(new Book("Шинель","Гоголь",1998,R.drawable.shinel));
-        bookLinkedList.add(new Book("Роковые яйца","М.Булгаков",2018,R.drawable.book));
-        bookLinkedList.add(new Book("Колобок","народ",2001,R.drawable.book));
+        if(bookLinkedList.size()==0) {
+            bookLinkedList.add(new Book("Основание", "АюАзимов", 2015, R.drawable.osnovanie));
+            bookLinkedList.add(new Book("Основани", "АюАзимов", 2015, R.drawable.osnovanie));
+            bookLinkedList.add(new Book("Преступление и наказание", "Достаевский", 1972, R.drawable.prestuplenie));
+            bookLinkedList.add(new Book("Шинель", "Гоголь", 1998, R.drawable.shinel));
+            bookLinkedList.add(new Book("Роковые яйца", "М.Булгаков", 2018, R.drawable.book));
+            bookLinkedList.add(new Book("Колобок", "народ", 2001, R.drawable.book));
+        }
 
 
         //TODO сщздать массив с ключами и идентификаторами
@@ -72,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         int [] idArray={R.id.book_title,R.id.author,R.id.year,R.id.image};
 
         //TODO сщздание списка map для адаптера
-        LinkedList<HashMap<String,Object>> listForAdopter=new LinkedList<>();
         for (int i = 0; i < bookLinkedList.size(); i++) {
             HashMap<String,Object>bookMap=new HashMap<>();
             bookMap.put(keyArray[0],bookLinkedList.get(i).title);
@@ -80,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
             bookMap.put(keyArray[2],bookLinkedList.get(i).year);
             bookMap.put(keyArray[3],bookLinkedList.get(i).coverId);
             listForAdopter.add(bookMap);
+
+
+            //TODO проверить на дубликаты (сделать дома)
+            ContentValues values=new ContentValues();
+            values.put(OpenHelper.COLUMN_AUTHOR,bookLinkedList.get(i).author);
+            values.put(OpenHelper.COLUMN_TITLE,bookLinkedList.get(i).title);
+            values.put(OpenHelper.COLUMN_YEAR,bookLinkedList.get(i).year);
+            database.insert(OpenHelper.TABLE_NAME,null,values);
+
 
         }
         //TODO создпние адаптера
@@ -179,5 +239,29 @@ public class MainActivity extends AppCompatActivity {
         simpleAdapter.notifyDataSetChanged();//обновление экрана
 
         //TODO сделать аннотацию к книге
+    }
+
+    void saveData() {
+        Set<String> book = new HashSet<>();
+        for (int i = 0; i < listForAdopter.size(); i++) {
+            String s = "*"+listForAdopter.get(i).get("title").toString() + " *" +
+                    listForAdopter.get(i).get("author").toString()+" *"
+                    +listForAdopter.get(i).get("year").toString();
+            book.add(s);
+
+        }
+        editor.putStringSet("book",book);
+        editor.apply();
+        Toast.makeText(this, "Saved",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveData();
+
+        database.close();
+
     }
 }
