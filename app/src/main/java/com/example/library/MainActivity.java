@@ -135,14 +135,14 @@ public class MainActivity extends AppCompatActivity {
 
 
             //TODO проверить на дубликаты (сделать дома)
-            if(!preferences.contains("controller")) {
+            //if(!preferences.contains("controller")) {
                 ContentValues values = new ContentValues();
                 values.put(OpenHelper.COLUMN_AUTHOR, bookLinkedList.get(i).author);
                 values.put(OpenHelper.COLUMN_TITLE, bookLinkedList.get(i).title);
                 values.put(OpenHelper.COLUMN_YEAR, bookLinkedList.get(i).year);
                 database.insert(OpenHelper.TABLE_NAME, null, values);
                 Toast.makeText(getApplicationContext(), "книги добавленны в базу данных", Toast.LENGTH_SHORT).show();
-            }
+           // }
 
 
         }
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         editor.putStringSet("book",book);
-        editor.putInt("controller",1);
+        //editor.putInt("controller",1);
         editor.apply();
         Toast.makeText(this, "Saved",
                 Toast.LENGTH_SHORT).show();
