@@ -24,8 +24,8 @@ public class OpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String sqlQuery="CREATE TABLE "+TABLE_NAME+"(_id integer PRIMARY KEY AUTOINCREMENT, "+
                 COLUMN_AUTHOR+" TEXT, "+
-                COLUMN_TITLE+" TEXT NOT NULL, "+
-                COLUMN_GENRE+"TEXT, "+
+                COLUMN_TITLE+" TEXT, "+
+                COLUMN_GENRE+" TEXT, "+
                 COLUMN_YEAR+" integer);";
         sqLiteDatabase.execSQL(sqlQuery);
     }

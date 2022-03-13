@@ -28,6 +28,13 @@
                 android:layout_margin="5dp"
                 android:id="@+id/del"
                 android:layout_below="@+id/book_list"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="показать информацию"
+        android:layout_margin="5dp"
+        android:id="@+id/information"
+        />
             <Button
                 android:id="@+id/add"
                 android:layout_width="wrap_content"
@@ -62,6 +69,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="год издания книги"/>
+    <EditText
+        android:id="@+id/genre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="жанр"/>
 
     <ListView
         android:id="@+id/book_list"

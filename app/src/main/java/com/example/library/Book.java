@@ -3,11 +3,13 @@ package com.example.library;
 public class Book implements Comparable<Book> {
     String title;
     String author;
+    String genre;
     int year;
     int coverId;
 
-    public Book(String title, String author,int year,int coverId) {
+    public Book(String title, String author,String genre,int year,int coverId) {
         this.title = title;
+        this.genre=genre;
         this.author = author;
         this.year=year;
         this.coverId=coverId;
