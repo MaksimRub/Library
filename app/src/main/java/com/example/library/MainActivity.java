@@ -331,168 +331,27 @@ public class MainActivity extends AppCompatActivity {
                 String title1 = name.getText().toString();
                 String year1 = year.getText().toString();
                 String genre1 = genre.getText().toString();
-                String all;
                 dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.dialog_simple);
                 textView = dialog.findViewById(R.id.search);
 
                 if (!author1.equals("")) {
-                    Cursor cursor = database.query(OpenHelper.TABLE_NAME,
-                            new String[]{OpenHelper.COLUMN_AUTHOR, OpenHelper.COLUMN_TITLE, OpenHelper.COLUMN_YEAR, OpenHelper.COLUMN_GENRE},
-                            "author=?", new String[]{author1}, null, null, null);
-                    cursor.moveToFirst();
-                    all = "";
-                    if (!cursor.moveToNext()) {
-                        cursor.moveToFirst();
-                        try {
-                            String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                            String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                            String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                            int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                            String year_need = Integer.toString(year);
-                            all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                        } catch (CursorIndexOutOfBoundsException e) {
-                            Toast.makeText(getApplicationContext(), "нет таких книг", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    cursor.moveToFirst();
-                    l = 0;
-                    while (cursor.moveToNext()) {
-                        l++;
-                        if (l == 1) {
-                            cursor.moveToFirst();
-                        }
-                        String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                        String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                        String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                        int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                        String year_need = Integer.toString(year);
-                        all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                    }
-
-                    textView.setText(all);
+                    textView.setText(search_book(author1,OpenHelper.COLUMN_AUTHOR));
                     dialog.show();
-
                 }
                 if (!title1.equals("")) {
-                    Cursor cursor = database.query(OpenHelper.TABLE_NAME,
-                            new String[]{OpenHelper.COLUMN_AUTHOR, OpenHelper.COLUMN_TITLE, OpenHelper.COLUMN_YEAR, OpenHelper.COLUMN_GENRE},
-                            "title=?", new String[]{title1}, null, null, null);
-                    cursor.moveToFirst();
-                    all = "";
-                    if (!cursor.moveToNext()) {
-                        cursor.moveToFirst();
-                        try {
-                            String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                            String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                            String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                            int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                            String year_need = Integer.toString(year);
-                            all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                        } catch (CursorIndexOutOfBoundsException e) {
-                            Toast.makeText(getApplicationContext(), "нет таких книг", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    cursor.moveToFirst();
-
-                    l = 0;
-                    while (cursor.moveToNext()) {
-                        l++;
-                        if (l == 1) {
-                            cursor.moveToFirst();
-                        }
-                        String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                        String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                        String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                        int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                        String year_need = Integer.toString(year);
-                        all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                    }
-
-                    textView.setText(all);
+                    textView.setText(search_book(title1,OpenHelper.COLUMN_TITLE));
                     dialog.show();
                 }
-
-
                 if (!year1.equals("")) {
-                    Cursor cursor = database.query(OpenHelper.TABLE_NAME,
-                            new String[]{OpenHelper.COLUMN_AUTHOR, OpenHelper.COLUMN_TITLE, OpenHelper.COLUMN_YEAR, OpenHelper.COLUMN_GENRE},
-                            "year=?", new String[]{year1}, null, null, null);
-                    cursor.moveToFirst();
-                    all = "";
-                    if (!cursor.moveToNext()) {
-                        cursor.moveToFirst();
-                        try {
-                            String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                            String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                            String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                            int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                            String year_need = Integer.toString(year);
-                            all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                        } catch (CursorIndexOutOfBoundsException e) {
-                            Toast.makeText(getApplicationContext(), "нет таких книг", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    cursor.moveToFirst();
-
-                    l = 0;
-                    while (cursor.moveToNext()) {
-                        l++;
-                        if (l == 1) {
-                            cursor.moveToFirst();
-                        }
-                        String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                        String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                        String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                        int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                        String year_need = Integer.toString(year);
-                        all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                    }
-
-                    textView.setText(all);
+                    textView.setText(search_book(year1,OpenHelper.COLUMN_YEAR));
                     dialog.show();
                 }
                 if (!genre1.equals("")) {
-                    Cursor cursor = database.query(OpenHelper.TABLE_NAME,
-                            new String[]{OpenHelper.COLUMN_AUTHOR, OpenHelper.COLUMN_TITLE, OpenHelper.COLUMN_YEAR, OpenHelper.COLUMN_GENRE},
-                            "genre=?", new String[]{genre1}, null, null, null);
-                    cursor.moveToFirst();
-                    all = "";
-                    if (!cursor.moveToNext()) {
-                        cursor.moveToFirst();
-                        try {
-                            String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                            String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                            String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                            int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                            String year_need = Integer.toString(year);
-                            all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                        } catch (CursorIndexOutOfBoundsException e) {
-                            Toast.makeText(getApplicationContext(), "нет таких книг", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    cursor.moveToFirst();
-
-                    l = 0;
-                    while (cursor.moveToNext()) {
-                        l++;
-                        if (l == 1) {
-                            cursor.moveToFirst();
-                        }
-                        String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
-                        String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
-                        String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
-                        int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
-                        String year_need = Integer.toString(year);
-                        all = all + author + " " + title + " " + year_need + " " + genre + "\n";
-                    }
-
-                    textView.setText(all);
+                    textView.setText(search_book(genre1,OpenHelper.COLUMN_GENRE));
                     dialog.show();
 
                 }
-
-
             }
 
         });
@@ -501,7 +360,45 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO сделать аннотацию к книге
         simpleAdapter.notifyDataSetChanged();//обновление экрана
+    }
+    public String search_book(String value,String text){
+        String all;
+        Cursor cursor = database.query(OpenHelper.TABLE_NAME,
+                new String[]{OpenHelper.COLUMN_AUTHOR, OpenHelper.COLUMN_TITLE, OpenHelper.COLUMN_YEAR, OpenHelper.COLUMN_GENRE},
+                text+"=?", new String[]{value}, null, null, null);
+        cursor.moveToFirst();
+        all = "";
+        if (!cursor.moveToNext()) {
+            cursor.moveToFirst();
+            try {
+                String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
+                String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
+                String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
+                int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
+                String year_need = Integer.toString(year);
+                all = all + author + " " + title + " " + year_need + " " + genre + "\n";
+            } catch (CursorIndexOutOfBoundsException e) {
+                Toast.makeText(getApplicationContext(), "нет таких книг", Toast.LENGTH_SHORT).show();
             }
+        }
+        cursor.moveToFirst();
+
+        l = 0;
+        while (cursor.moveToNext()) {
+            l++;
+            if (l == 1) {
+                cursor.moveToFirst();
+            }
+            String author = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_AUTHOR));
+            String title = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_TITLE));
+            String genre = cursor.getString(cursor.getColumnIndex(OpenHelper.COLUMN_GENRE));
+            int year = cursor.getInt(cursor.getColumnIndex(OpenHelper.COLUMN_YEAR));
+            String year_need = Integer.toString(year);
+            all = all + author + " " + title + " " + year_need + " " + genre + "\n";
+        }
+
+        return all;
+    }
 
 
 
